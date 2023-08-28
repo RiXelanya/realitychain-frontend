@@ -1,0 +1,15 @@
+.mintInterface {
+    top: 1;
+}
+
+.mintInterfaceText {
+    color:black;
+}
+
+.mintButton {
+    color:blueviolet;
+}
+
+.errorMessage {
+    color:red;
+}
