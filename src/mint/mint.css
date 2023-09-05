@@ -66,6 +66,8 @@
 
 .glow-on-hover:disabled {
     color:#ff0000;
+    background: gray;
+    opacity: 20;
 }
 
 @keyframes glowing {
