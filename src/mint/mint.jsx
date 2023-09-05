@@ -22,11 +22,21 @@ const MintInterface = props => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    const proof = getMerkleLegendTree().getHexProof(hashedAddress);
-   await mintContract.mintLegendary(1,proof,{ value: ethers.parseEther('0.05') }).wait().then(tx => {
-      tx.wait()
-   }).catch(err => {
+   try {
+      const tx = await mintContract.mintLegendary(1,proof,{ value: ethers.parseEther('0.05') }).then(tx => {
+         return tx.wait()
+      }).then(tx => {
+         const events = tx.logs ;
+         const event = events[0].args
+         setMessage(String(event[2]))
+      })
+      }
+   catch(err) {
       setError('there is an error');
-   })
+      if (message !== '') {
+         setMessage('')
+      }
+   }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
  const handleEpicMint = async () => {
@@ -34,25 +44,42 @@ const MintInterface = props => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    const proof = getMerkleEpicTree().getHexProof(hashedAddress);
-   await mintContract.mintEpic(1,proof,{ value: ethers.parseEther('0.03') }).then(tx => {
-      tx.wait()
-   }).catch(err => {
-      setError('there is an error');
+   try {
+   const tx = await mintContract.mintEpic(1,proof,{ value: ethers.parseEther('0.03') }).then(tx => {
+      return tx.wait()
+   }).then(tx => {
+      const events = tx.logs ;
+      const event = events[0].args
+      setMessage(String(event[2]))
    })
+   }
+   catch(err) {
+      setError('there is an error');
+      if (message !== '') {
+         setMessage('')
+      }
+   }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
  const handleRareMint = async () => {
    
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
-   let tx = await mintContract.mintRare(1,{ value: ethers.parseEther('0.01') }).then(tx => {
-      return tx.wait()
-   }).catch(err => {
+   try {
+      await mintContract.mintRare(1,{ value: ethers.parseEther('0.01') }).then(tx => {
+         return tx.wait()
+      }).then(tx => {
+         const events = tx.logs ;
+         const event = events[0].args
+         setMessage(String(event[2]))
+      })
+   }
+   catch(err) {
+      if (message !== '') {
+         setMessage('')
+      }
       setError('there is an error');
-   })
-   const events = tx.logs
-   const event = events[0].args
-   setMessage(event[2])
+   }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
    
  }
@@ -78,8 +105,8 @@ const MintInterface = props => {
         <button onClick={handleRareMint} className="glow-on-hover">
          Rare mint
          </button>
+        {message !== '' && <p>Your token id is {message}</p>}
         {error !== '' && <p className="errorMessage">{error}</p>}
-        {message !== '' && <p>{message}</p>}
         </div>
      )
 }
