@@ -23,7 +23,7 @@ const MintInterface = props => {
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    const proof = getMerkleLegendTree().getHexProof(hashedAddress);
    try {
-      const tx = await mintContract.mintLegendary(1,proof,{ value: ethers.parseEther('0.05') }).then(tx => {
+      await mintContract.mintLegendary(1,proof,{ value: ethers.parseEther('0.05') }).then(tx => {
          return tx.wait()
       }).then(tx => {
          const events = tx.logs ;
@@ -45,7 +45,7 @@ const MintInterface = props => {
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    const proof = getMerkleEpicTree().getHexProof(hashedAddress);
    try {
-   const tx = await mintContract.mintEpic(1,proof,{ value: ethers.parseEther('0.03') }).then(tx => {
+   await mintContract.mintEpic(1,proof,{ value: ethers.parseEther('0.03') }).then(tx => {
       return tx.wait()
    }).then(tx => {
       const events = tx.logs ;
