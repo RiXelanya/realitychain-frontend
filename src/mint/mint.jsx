@@ -1,7 +1,6 @@
-import { getMerkleLegendRoot, getMerkleLegendTree } from "../utils/legend";
-import { getMerkleRareTree } from "../utils/rare";
+import { getMerkleLegendTree } from "../utils/legend";
 import { getMerkleEpicTree } from "../utils/epic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import keccak256 from "keccak256";
 import './mint.css'
@@ -10,66 +9,77 @@ const contractABI = require('./abi.json');
 
 const MintInterface = props => {
  const { address } = props ;
- const contractAddress = '0x8789151CC40d245d62b056B236ff657A795ab081';
- const [rank, setRank] = useState(0);
- const [price, setPrice] = useState(0);
- const [tier, setTier] = useState('')
- const [proof,setProof] = useState('')
+ const hashedAddress = keccak256(address);
+ const contractAddress = '0x23331Bdb6A8aB6B5A617032B81786DFB8aD410D7';
  const [error,setError] = useState('')
- const rare = getMerkleRareTree();
+ const [legendWhitelist, setLegendWhitelist] = useState(false);
+ const [epicWhitelist, setEpicWhitelist] = useState(false);
+ const [message, setMessage] = useState('')
  const provider = new ethers.BrowserProvider(window.ethereum);
 
- const handleMint = async () => {
+ const handleLegendMint = async () => {
    
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
-   console.log(proof);
-   try {
-   let tx = await mintContract.mint(rank,proof,"",{ value: ethers.parseEther(price) })
+   const proof = getMerkleLegendTree().getHexProof(hashedAddress);
+   await mintContract.mintLegendary(1,proof,{ value: ethers.parseEther('0.05') }).wait().then(tx => {
+      tx.wait()
+   }).catch(err => {
+      setError('there is an error');
+   })
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
-   await tx.wait()
-}
-   catch {
-      console.log('there is an error');
-      setError('There is an error')
-   }
  }
-
- if (rare.verify(rare.getProof(keccak256(address)),keccak256(address),rare.getRoot())) {
-    if (tier !== 'rare') {
-    setTier('rare');
-    setRank(2);
-    setPrice('0.01')
-    setProof(rare.getHexProof(keccak256(address)))
+ const handleEpicMint = async () => {
+   
+   const signer = await provider.getSigner();
+   let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
+   const proof = getMerkleEpicTree().getHexProof(hashedAddress);
+   await mintContract.mintEpic(1,proof,{ value: ethers.parseEther('0.03') }).then(tx => {
+      tx.wait()
+   }).catch(err => {
+      setError('there is an error');
+   })
+   // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
-}
-else {
-    const epic = getMerkleEpicTree();
-    if (epic.verify(epic.getProof(keccak256(address)),keccak256(address),epic.getRoot())) {
-        if (tier !== 'epic') {
-        setTier('epic');
-        setRank(1);
-        setPrice('0.03');
-        setProof(epic.getHexProof(keccak256(address)))
-     }
-    }
-     else {
-        const legend = getMerkleLegendTree();
-        if (legend.verify(legend.getProof(keccak256(address)),keccak256(address),legend.getRoot())) {
-            if (tier !== 'legend'){
-            setTier('legend');
-            setRank(0);
-            setPrice('0.05')
-            setProof(legend.getHexProof(keccak256(address)))
-         }
-        }
-     }
-    }
+ const handleRareMint = async () => {
+   
+   const signer = await provider.getSigner();
+   let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
+   let tx = await mintContract.mintRare(1,{ value: ethers.parseEther('0.01') }).then(tx => {
+      return tx.wait()
+   }).catch(err => {
+      setError('there is an error');
+   })
+   const events = tx.logs
+   const event = events[0].args
+   setMessage(event[2])
+   // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
+   
+ }
+ useEffect(()=> {
+   const legend = getMerkleLegendTree();
+   const legendRoot = legend.getHexRoot();
+   const legendProof = legend.getHexProof(hashedAddress);
+   const epic = getMerkleEpicTree();
+   const epicRoot = epic.getHexRoot();
+   const epicProof = epic.getHexProof(hashedAddress);
+   setEpicWhitelist(epic.verify(epicProof,hashedAddress,epicRoot))
+   setLegendWhitelist(legend.verify(legendProof,hashedAddress,legendRoot))
+ },[hashedAddress])
      return (
         <div className="mintInterface">
-        <p className="mintInterfaceText">You are whitelisted as {tier} address. Minting will cost {price} eth</p>
-        <button onClick={handleMint} className="mintButton">{tier} mint</button>
+        <p className="mintInterfaceText">Placeholder</p>
+        <button onClick={handleLegendMint} className="mintButton" disabled={!legendWhitelist}>
+         Legend mint
+        </button>
+        <button onClick={handleEpicMint} className="mintButton" disabled={!epicWhitelist}>
+         Epic mint
+         </button>
+        <button onClick={handleRareMint} className="mintButton">
+         Rare mint
+         </button>
         {error !== '' && <p className="errorMessage">{error}</p>}
+        {message !== '' && <p>{message}</p>}
         </div>
      )
 }
