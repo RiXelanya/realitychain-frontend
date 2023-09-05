@@ -64,6 +64,10 @@
     border-radius: 30px;
 }
 
+.glow-on-hover:disabled {
+    color:#ff0000;
+}
+
 @keyframes glowing {
     0% { background-position: 0 0; }
     50% { background-position: 400% 0; }

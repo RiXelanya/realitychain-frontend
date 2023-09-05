@@ -69,13 +69,13 @@ const MintInterface = props => {
      return (
         <div className="mintInterface">
         <p className="mintInterfaceText">Placeholder</p>
-        <button onClick={handleLegendMint} className="mintButton" disabled={!legendWhitelist}>
+        <button onClick={handleLegendMint} className="glow-on-hover" disabled={!legendWhitelist}>
          Legend mint
         </button>
-        <button onClick={handleEpicMint} className="mintButton" disabled={!epicWhitelist}>
+        <button onClick={handleEpicMint} className="glow-on-hover" disabled={!epicWhitelist}>
          Epic mint
          </button>
-        <button onClick={handleRareMint} className="mintButton">
+        <button onClick={handleRareMint} className="glow-on-hover">
          Rare mint
          </button>
         {error !== '' && <p className="errorMessage">{error}</p>}
