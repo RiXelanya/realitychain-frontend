@@ -8,7 +8,7 @@ const addresses = [
     '0x9D35AED7ff571CBdFaF8a4710BebF105b54A38f4',
     '0x7c41F39B8d12409486d9ED36134AED9B2345CB6C'
 ];
-const getMerkleEpicRoot = () => {
+export const getMerkleEpicRoot = () => {
 const tree = getMerkleEpicTree()
 return tree.getHexRoot()
 }

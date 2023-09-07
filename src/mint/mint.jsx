@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import keccak256 from "keccak256";
 import './mint.css'
+import { errorHandler } from "../error/error";
 
 const contractABI = require('./abi.json');
 
@@ -29,6 +30,9 @@ const MintInterface = props => {
          const events = tx.logs ;
          const event = events[0].args
          setMessage(String(event[2]))
+         if (error !== '') {
+            setError('')
+         }
       })
       }
    catch(err) {
@@ -36,6 +40,7 @@ const MintInterface = props => {
       if (message !== '') {
          setMessage('')
       }
+      setError(errorHandler(String(err.message)));
    }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
@@ -51,6 +56,9 @@ const MintInterface = props => {
       const events = tx.logs ;
       const event = events[0].args
       setMessage(String(event[2]))
+      if (error !== '') {
+         setError('')
+      }
    })
    }
    catch(err) {
@@ -58,6 +66,7 @@ const MintInterface = props => {
       if (message !== '') {
          setMessage('')
       }
+      setError(errorHandler(String(err.message)));
    }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
@@ -72,13 +81,16 @@ const MintInterface = props => {
          const events = tx.logs ;
          const event = events[0].args
          setMessage(String(event[2]))
+         if (error !== '') {
+            setError('')
+         }
       })
    }
    catch(err) {
       if (message !== '') {
          setMessage('')
       }
-      setError('there is an error');
+      setError(errorHandler(String(err.message)));
    }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
    

@@ -1,8 +1,6 @@
 import './userInterface.css'
 import { React, useState } from 'react'
-import {Buffer} from 'buffer';
 import MintInterface from '../mint/mint';
-const { ethers } = require("ethers");
 const UserInterface = props => {
   const [address, setAddress] = useState('');
   window.Buffer = window.Buffer || require("buffer").Buffer
