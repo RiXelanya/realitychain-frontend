@@ -2,19 +2,19 @@ export function errorHandler (message) {
     let output = ""
     switch(errorMessageSplitter(message)) {
         case "execution reverted":
-            output = "This address has minted the max amount. No minting allowed"
+            output = "Execution reverted because user attempted to mint more than allowed"
             break
         case "missing revert data":
             output = "There is not enough ethereum to cover minting and gas fee"
             break
         case "user rejected action":
-            output = "User rejected transaction"
+            output = "Transaction rejected by user"
             break
         case "events[0] is undefined":
             output = "Transaction is not done on correct chain network"
             break
         default:
-            output = "There is an error"  
+            output = errorMessageSplitter(message) 
     }
     return output
 }

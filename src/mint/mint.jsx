@@ -16,9 +16,31 @@ const MintInterface = props => {
  const [legendWhitelist, setLegendWhitelist] = useState(false);
  const [epicWhitelist, setEpicWhitelist] = useState(false);
  const [message, setMessage] = useState('')
+ const [rarenum, setRarenum] = useState(1)
+ const [epicnum, setEpicnum] = useState(1)
  const provider = new ethers.BrowserProvider(window.ethereum);
 
- const handleLegendMint = async () => {
+ const eventHandler = tx => {
+   const events = tx.logs ;
+   const event = events.map(event => String(event.args[2]))
+   let temp = ''
+   event.forEach(event => temp = temp + event + " ")
+   setMessage(temp)
+   if (error !== '') {
+      setError('')
+   }
+ }
+
+ const handleRareChange = event => {
+   setRarenum(event.target.value)
+ }
+
+ const handleEpicChange = event => {
+   setEpicnum(event.target.value)
+ }
+
+ const handleLegendMint = async (event) => {
+   event.preventDefault()
    
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
@@ -27,12 +49,7 @@ const MintInterface = props => {
       await mintContract.mintLegendary(1,proof,{ value: ethers.parseEther('0.05') }).then(tx => {
          return tx.wait()
       }).then(tx => {
-         const events = tx.logs ;
-         const event = events[0].args
-         setMessage(String(event[2]))
-         if (error !== '') {
-            setError('')
-         }
+         eventHandler(tx)     
       })
       }
    catch(err) {
@@ -44,22 +61,21 @@ const MintInterface = props => {
    }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
- const handleEpicMint = async () => {
+ const handleEpicMint = async (event) => {
+   event.preventDefault()
    
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
+   setMessage('')
    const proof = getMerkleEpicTree().getHexProof(hashedAddress);
    try {
-   await mintContract.mintEpic(1,proof,{ value: ethers.parseEther('0.03') }).then(tx => {
+   const price = Number(epicnum) * 0.03
+   await mintContract.mintEpic(epicnum,proof,{ value: ethers.parseEther(String(price)) }).then(tx => {
       return tx.wait()
    }).then(tx => {
-      const events = tx.logs ;
-      const event = events[0].args
-      setMessage(String(event[2]))
-      if (error !== '') {
-         setError('')
-      }
+      eventHandler(tx)     
    })
+   setEpicnum(1)
    }
    catch(err) {
       setError('there is an error');
@@ -70,21 +86,20 @@ const MintInterface = props => {
    }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
- const handleRareMint = async () => {
+ const handleRareMint = async (event) => {
+   event.preventDefault()
    
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
+   setMessage('')
    try {
-      await mintContract.mintRare(1,{ value: ethers.parseEther('0.01') }).then(tx => {
+      const price = Number(rarenum) * 0.01
+      await mintContract.mintRare(rarenum,{ value: ethers.parseEther(String(price)) }).then(tx => {
          return tx.wait()
       }).then(tx => {
-         const events = tx.logs ;
-         const event = events[0].args
-         setMessage(String(event[2]))
-         if (error !== '') {
-            setError('')
-         }
+         eventHandler(tx)     
       })
+      setRarenum(1)
    }
    catch(err) {
       if (message !== '') {
@@ -108,15 +123,24 @@ const MintInterface = props => {
      return (
         <div className="mintInterface">
         <p className="mintInterfaceText">Placeholder</p>
-        <button onClick={handleLegendMint} className="glow-on-hover" disabled={!legendWhitelist}>
-         Legend mint
-        </button>
-        <button onClick={handleEpicMint} className="glow-on-hover" disabled={!epicWhitelist}>
-         Epic mint
-         </button>
-        <button onClick={handleRareMint} className="glow-on-hover">
-         Rare mint
-         </button>
+        <div classname="mintingform">
+         <form onSubmit={handleLegendMint}>
+            <input type="number" value="1" min="1" max="1" step="1"></input>
+            <input type="submit" className="glow-on-hover" value="Legend Mint" disabled={!legendWhitelist}></input>
+         </form>
+        </div>
+        <div classname="mintingform">
+         <form onSubmit={handleEpicMint}>
+         <input type="number" value={epicnum} onChange={handleEpicChange} min="1" max="3" step="1"></input>
+            <input type="submit" className="glow-on-hover" value="Epic Mint" disabled={!epicWhitelist}></input>
+         </form>
+         </div>
+        <div classname="mintingform">
+        <form onSubmit={handleRareMint}>
+            <input type="number" value={rarenum} onChange={handleRareChange} min="1" max="5" step="1"></input>
+            <input type="submit" className="glow-on-hover" value="Rare Mint"></input>
+         </form>
+         </div>
         {message !== '' && <p>Your token id is {message}</p>}
         {error !== '' && <p className="errorMessage">{error}</p>}
         </div>
