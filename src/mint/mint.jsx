@@ -11,7 +11,7 @@ const contractABI = require('./abi.json');
 const MintInterface = props => {
  const { address } = props ;
  const hashedAddress = keccak256(address);
- const contractAddress = '0x23331Bdb6A8aB6B5A617032B81786DFB8aD410D7';
+ const contractAddress = '0xF3a2bBd09d38bf120a940F965266034248eC0F84';
  const [error,setError] = useState('')
  const [legendWhitelist, setLegendWhitelist] = useState(false);
  const [epicWhitelist, setEpicWhitelist] = useState(false);
@@ -19,6 +19,24 @@ const MintInterface = props => {
  const [rarenum, setRarenum] = useState(1)
  const [epicnum, setEpicnum] = useState(1)
  const provider = new ethers.BrowserProvider(window.ethereum);
+
+ const errorMessage = err => {
+   if (message !== '') {
+      setMessage('')
+   }
+   setError(errorHandler(String(err.message)));
+
+ }
+
+ const chainverifier = async () => {
+   const chainId = await window.ethereum.request({ method: 'eth_chainId' })
+    if(chainId !== '0x66eed') {
+        await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x66eed' }],
+          }).catch(err => {throw new Error("Wrong Chain")});
+    }
+ }
 
  const eventHandler = tx => {
    const events = tx.logs ;
@@ -45,20 +63,15 @@ const MintInterface = props => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    const proof = getMerkleLegendTree().getHexProof(hashedAddress);
-   try {
-      await mintContract.mintLegendary(1,proof,{ value: ethers.parseEther('0.05') }).then(tx => {
+      await chainverifier().then(
+         () => mintContract.mintLegendary(proof,{ value: ethers.parseEther('0.05') })
+         ).then(tx => {
          return tx.wait()
       }).then(tx => {
          eventHandler(tx)     
-      })
-      }
-   catch(err) {
-      setError('there is an error');
-      if (message !== '') {
-         setMessage('')
-      }
-      setError(errorHandler(String(err.message)));
-   }
+      }).catch(err => {
+         errorMessage(err)
+   })
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
  const handleEpicMint = async (event) => {
@@ -68,22 +81,17 @@ const MintInterface = props => {
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    setMessage('')
    const proof = getMerkleEpicTree().getHexProof(hashedAddress);
-   try {
    const price = Number(epicnum) * 0.03
-   await mintContract.mintEpic(epicnum,proof,{ value: ethers.parseEther(String(price)) }).then(tx => {
+   await chainverifier().then(
+      () => mintContract.mintEpic(epicnum,proof,{ value: ethers.parseEther(String(price)) })
+      ).then(tx => {
       return tx.wait()
    }).then(tx => {
       eventHandler(tx)     
-   })
+   }).catch(err => {
+      errorMessage(err)
+})
    setEpicnum(1)
-   }
-   catch(err) {
-      setError('there is an error');
-      if (message !== '') {
-         setMessage('')
-      }
-      setError(errorHandler(String(err.message)));
-   }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
  const handleRareMint = async (event) => {
@@ -92,21 +100,17 @@ const MintInterface = props => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    setMessage('')
-   try {
       const price = Number(rarenum) * 0.01
-      await mintContract.mintRare(rarenum,{ value: ethers.parseEther(String(price)) }).then(tx => {
+      await chainverifier().then(
+         () => mintContract.mintRare(rarenum,{ value: ethers.parseEther(String(price)) })
+         ).then(tx => {
          return tx.wait()
       }).then(tx => {
          eventHandler(tx)     
-      })
+      }).catch(err => {
+         errorMessage(err)
+   })
       setRarenum(1)
-   }
-   catch(err) {
-      if (message !== '') {
-         setMessage('')
-      }
-      setError(errorHandler(String(err.message)));
-   }
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
    
  }

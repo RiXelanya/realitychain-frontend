@@ -17,13 +17,16 @@ const UserInterface = props => {
       }
     });
     const account = accounts[0];
-    setAddress(account);
+    
     const chainId = await window.ethereum.request({ method: 'eth_chainId' })
     if(chainId !== '0x66eed') {
         await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0x66eed' }],
-          });
+          }).then(setAddress(account)).catch(err => setAddress(''));
+    }
+    else {
+      setAddress(account)
     }
   }
 
@@ -32,6 +35,12 @@ const UserInterface = props => {
         <button className="ConnectorButton" onClick={handleMetamaskConnect}>Connect Metamask</button>
     )
   }
+
+  const handleAccountChange = accounts => {
+    setAddress(accounts[0])
+  }
+
+  window.ethereum.on('accountsChanged', handleAccountChange)
   return (
     <div className='userInterface'>
     <p className='userInterfaceText'>Connected to Address<br></br>{address}</p>

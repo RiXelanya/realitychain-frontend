@@ -13,6 +13,9 @@ export function errorHandler (message) {
         case "events[0] is undefined":
             output = "Transaction is not done on correct chain network"
             break
+        case "Wrong Chain":
+            output = "User is in the wrong chain"
+            break
         default:
             output = errorMessageSplitter(message) 
     }
