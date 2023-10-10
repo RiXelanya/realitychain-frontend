@@ -15,9 +15,6 @@
     display: block;
 }
 
-.mintingform {
-}
-
 .glow-on-hover {
     width: 220px;
     height: 50px;
@@ -49,7 +46,7 @@
 }
 
 .glow-on-hover:active {
-    color: #000
+    background: linear-gradient(135deg, #06336d 30%, #c30da9);
 }
 
 .glow-on-hover:active:after {
@@ -66,15 +63,31 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #ff42b4 40%, #ff6ac8);
+    background: linear-gradient(135deg, #06336d 30%, #c30da9);
     left: 0;
     top: 0;
     border-radius: 30px;
 }
 
 .glow-on-hover:disabled {
-    color:#ff0000;
-    background: gray;
+    background: linear-gradient(135deg, #656565 30%, #b1b1b1) !important;
+	color: #323232;
+    left: 0;
+    opacity: 20;
+}
+
+
+.glow-on-hover:disabled:before {
+    background: linear-gradient(135deg, #656565 30%, #b1b1b1) !important;
+	color: #323232;
+    left: 0;
+    opacity: 20;
+}
+
+.glow-on-hover:disabled:after {
+    background: linear-gradient(135deg, #656565 30%, #b1b1b1) !important;
+	color: #323232;
+    left: 0;
     opacity: 20;
 }
 

@@ -57,8 +57,7 @@ const MintInterface = props => {
    setEpicnum(event.target.value)
  }
 
- const handleLegendMint = async (event) => {
-   event.preventDefault()
+ const handleLegendMint = async () => {
    
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
@@ -74,9 +73,7 @@ const MintInterface = props => {
    })
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
- const handleEpicMint = async (event) => {
-   event.preventDefault()
-   
+ const handleEpicMint = async () => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    setMessage('')
@@ -94,9 +91,7 @@ const MintInterface = props => {
    setEpicnum(1)
    // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
- const handleRareMint = async (event) => {
-   event.preventDefault()
-   
+ const handleRareMint = async () => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    setMessage('')
@@ -128,22 +123,23 @@ const MintInterface = props => {
         <div className="mintInterface">
         <p className="mintInterfaceText">Placeholder</p>
         <div classname="mintingform">
-         <form onSubmit={handleLegendMint}>
-            <input type="number" value="1" min="1" max="1" step="1"></input>
-            <input type="submit" className="glow-on-hover" value="Legend Mint" disabled={!legendWhitelist}></input>
+         <form classname="inputform">
+            <input classname="input" type="number" value="1" min="1" max="1" step="1"></input>
          </form>
+         <button onClick={handleLegendMint} className="glow-on-hover" disabled={!legendWhitelist}>Legend Mint</button>
         </div>
         <div classname="mintingform">
-         <form onSubmit={handleEpicMint}>
-         <input type="number" value={epicnum} onChange={handleEpicChange} min="1" max="3" step="1"></input>
-            <input type="submit" className="glow-on-hover" value="Epic Mint" disabled={!epicWhitelist}></input>
+         <form classname="inputform">
+         <input classname="input" type="number" value={epicnum} onChange={handleEpicChange} min="1" max="3" step="1"></input>
          </form>
+         <button onClick={handleEpicMint} className="glow-on-hover" disabled={!epicWhitelist}>Epic Mint</button>
          </div>
         <div classname="mintingform">
-        <form onSubmit={handleRareMint}>
-            <input type="number" value={rarenum} onChange={handleRareChange} min="1" max="5" step="1"></input>
-            <input type="submit" className="glow-on-hover" value="Rare Mint"></input>
+        <form classname="inputform">
+            <input classname="input" type="number" value={rarenum} onChange={handleRareChange} min="1" max="5" step="1">     
+            </input>
          </form>
+            <button onClick={handleRareMint} className="glow-on-hover">Rare Mint</button>
          </div>
         {message !== '' && <p>Your token id is {message}</p>}
         {error !== '' && <p className="errorMessage">{error}</p>}
