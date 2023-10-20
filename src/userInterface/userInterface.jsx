@@ -61,6 +61,7 @@ const UserInterface = props => {
   return (
     <div className='userInterface'>
     <p className='userInterfaceText'>Connected to Address<br></br>{address}</p>
+    <div className="break"></div>
     <MintInterface address={address}></MintInterface>
     </div>
   )

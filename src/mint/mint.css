@@ -3,8 +3,9 @@
     flex-direction: column;
 }
 
-.mintInterfaceText {
-    color:black;
+.mintingform{
+	flex:1;
+	width: 500px;
 }
 
 .mintButton {
@@ -97,6 +98,122 @@
     100% { background-position: 0 0; }
 }
 
+@media (min-width: 700px) {
+    .userInterface {
+      flex-direction: row;
+      width: 100%;
+    }
+  }
+
 .errorMessage {
     color:red;
 }
+
+.tabset > input[type="radio"] {
+    left: -200vw;
+    position: absolute;
+  }
+  
+  .tabset .tab-panel {
+    display: none;
+  }
+  
+  .tabset > input:first-child:checked ~ .tab-panels > .tab-panel:first-child,
+  .tabset > input:nth-child(3):checked ~ .tab-panels > .tab-panel:nth-child(2),
+  .tabset > input:nth-child(5):checked ~ .tab-panels > .tab-panel:nth-child(3) {
+    display: block;
+  }
+  
+  /*
+  -----Styling
+  */
+  
+  .tabset > label {
+    position: relative;
+    display: inline-block;
+    padding: 15px 15px 25px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .tabset > label::after {
+    content: "";
+    position: absolute;
+    left: 15px;
+    bottom: 10px;
+    width: 22px;
+    height: 4px;
+    background: #8d8d8d;
+  }
+  
+  input:focus-visible + label {
+    outline: 2px solid rgba(0,102,204,1);
+    border-radius: 3px;
+  }
+  
+  .tabset > label:hover,
+  .tabset > input:focus + label,
+  .tabset > input:checked + label {
+    color: #06c;
+  }
+  
+  .tabset > label:hover::after,
+  .tabset > input:focus + label::after,
+  .tabset > input:checked + label::after {
+    background: #06c;
+  }
+  
+  .tabset > input:checked + label {
+      border-radius: 5px;
+    border-color: #333333;
+    border-bottom:none;
+    margin-bottom: -1px;
+  }
+  
+  .tab-panel {
+    padding: 15px 0;
+    border-top: 1px solid #333333;
+  }
+
+  .rare{
+    color: #0eb00e;
+    }
+    
+    .epic{
+    color: #d70fd7;
+    }
+    
+    .legendary{
+    color: #d0d114;
+    }
+
+    .input-field{
+        height: 35px;
+        font-size: 1.2em;
+        border-radius: 5px;
+        flex-basis:60%;
+        background-color: #5a5a5a;
+        color: #ffffff;
+        flex: 2;
+    }
+
+    .mintingform{
+        flex:1;
+        width: 500px;
+    }
+    
+    form{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+    }
+    .mintInterfaceText{
+        text-align: center;
+        color:#BBBBBB;
+        margin-bottom:35px;
+    }
+    

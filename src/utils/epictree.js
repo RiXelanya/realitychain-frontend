@@ -1,4 +1,17 @@
-{
+const merkle = require('merkletreejs') ;
+const keccak256 = require('keccak256');
+
+export const getMerkleEpicRoot = () => {
+  const tree = getMerkleEpicTree()
+  return tree.getHexRoot()
+  }
+  
+  
+export const getMerkleEpicTree = () => {
+      return merkle.MerkleTree.unmarshalTree(marshal,keccak256, { sortPairs: true, })
+  }
+
+const marshal = `{
   "options": {
     "complete": false,
     "isBitcoinTree": false,
@@ -40,4 +53,4 @@
     "0x4e007cc0a0390cf2bdd0bcdf64c61c8cee6d22d1d1771318f388ae6221f4e0c0",
     "0xe3c5a46241c75f28ea87211144fd8dabf170d31c756a6c105b2e77c8d6dedf03"
   ]
-}
+}`

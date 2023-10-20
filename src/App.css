@@ -1,6 +1,12 @@
 .App {
-  text-align: center;
-  background-color: beige;
+  background-color:#15161a;
+	color:#ffffff;
+	justify-content: center;
+	text-align: center;
+	font-family: sans-serif;
+	width: 500px;
+
+	margin: auto;
 }
 
 .RefreshButton {

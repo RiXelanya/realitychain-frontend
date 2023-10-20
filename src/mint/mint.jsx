@@ -1,5 +1,5 @@
-import { getMerkleLegendTree } from "../utils/legend";
-import { getMerkleEpicTree } from "../utils/epic";
+import { getMerkleLegendTree } from "../utils/legendtree";
+import { getMerkleEpicTree } from "../utils/epictree";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import keccak256 from "keccak256";
@@ -50,11 +50,11 @@ const MintInterface = props => {
  }
 
  const handleRareChange = event => {
-   setRarenum(event.target.value)
+   setRarenum(Number(event.target.value))
  }
 
  const handleEpicChange = event => {
-   setEpicnum(event.target.value)
+   setEpicnum(Number(event.target.value))
  }
 
  const handleLegendMint = async () => {
@@ -119,27 +119,57 @@ const MintInterface = props => {
    setEpicWhitelist(epic.verify(epicProof,hashedAddress,epicRoot))
    setLegendWhitelist(legend.verify(legendProof,hashedAddress,legendRoot))
  },[hashedAddress])
+
+ const handleSubmit = event => {
+   event.preventDefault()
+ }
      return (
         <div className="mintInterface">
         <p className="mintInterfaceText">Placeholder</p>
-        <div classname="mintingform">
-         <form classname="inputform">
-            <input classname="input" type="number" value="1" min="1" max="1" step="1"></input>
-         </form>
-         <button onClick={handleLegendMint} className="glow-on-hover" disabled={!legendWhitelist}>Legend Mint</button>
-        </div>
-        <div classname="mintingform">
-         <form classname="inputform">
-         <input classname="input" type="number" value={epicnum} onChange={handleEpicChange} min="1" max="3" step="1"></input>
-         </form>
-         <button onClick={handleEpicMint} className="glow-on-hover" disabled={!epicWhitelist}>Epic Mint</button>
-         </div>
-        <div classname="mintingform">
-        <form classname="inputform">
-            <input classname="input" type="number" value={rarenum} onChange={handleRareChange} min="1" max="5" step="1">     
-            </input>
-         </form>
-            <button onClick={handleRareMint} className="glow-on-hover">Rare Mint</button>
+        <div className="mintingform">
+         <div className="tabset">
+         <input type="radio" name="tabset" id="tab1" aria-controls="rare"/>
+					<label htmlFor="tab1">Rare</label>
+					<input type="radio" name="tabset" id="tab2" aria-controls="epic" disabled={!epicWhitelist}/>
+					<label htmlFor="tab2">Epic</label>
+					<input type="radio" name="tabset" id="tab3" aria-controls="legendary" disabled={!legendWhitelist}/>
+					<label htmlFor="tab3">Legendary</label>
+               <div className="tab-panels">
+							<section id="rare" className="tab-panel">
+								<p className="mintInterfaceText">You're minting <strong className="rare">RARE</strong> Av8tars</p>	
+								<form onSubmit={handleSubmit}>
+									<select name="amount" id="amount" className="input-field" onChange={handleRareChange}>
+										<option defaultValue="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+                              <option value="4">4</option>
+										<option value="5">5</option>
+									</select>
+									<button type="button" onClick= {handleRareMint} className="glow-on-hover">MINT!</button>
+								</form>
+							</section>
+							<section id="epic" className="tab-panel">
+								<p className="mintInterfaceText">You're minting <strong className="epic">EPIC</strong> Av8tars</p>	
+								<form onSubmit={handleSubmit}>
+									<select name="amount" id="amount" className="input-field" onChange={handleEpicChange}>
+										<option defaultValue="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+									</select>
+									<button type="button" className="glow-on-hover" value="Mint" onClick={handleEpicMint} disabled={!epicWhitelist}>MINT!</button>
+								</form>
+							</section>
+							<section id="legendary" className="tab-panel">
+								<p className="mintInterfaceText">You're minting <strong className="legendary">LEGENDARY</strong> Av8tars</p>	
+								<form onSubmit={handleSubmit}>
+									<select name="amount" id="amount" className="input-field">
+										<option defaultValue="1">1</option>
+									</select>
+									<button type="button" className="glow-on-hover" value="Mint" onClick={handleLegendMint} disabled={!legendWhitelist}>MINT!</button>
+								</form>
+							</section>
+						</div>
+            </div>
          </div>
         {message !== '' && <p>Your token id is {message}</p>}
         {error !== '' && <p className="errorMessage">{error}</p>}
