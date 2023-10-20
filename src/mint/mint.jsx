@@ -18,6 +18,8 @@ const MintInterface = props => {
  const [message, setMessage] = useState('')
  const [rarenum, setRarenum] = useState(1)
  const [epicnum, setEpicnum] = useState(1)
+ const epictree = getMerkleEpicTree()
+ const legendtree = getMerkleLegendTree()
  const provider = new ethers.BrowserProvider(window.ethereum);
 
  const errorMessage = err => {
@@ -61,7 +63,7 @@ const MintInterface = props => {
    
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
-   const proof = getMerkleLegendTree().getHexProof(hashedAddress);
+   const proof = legendtree.getHexProof(hashedAddress);
       await chainverifier().then(
          () => mintContract.mintLegendary(proof,{ value: ethers.parseEther('0.05') })
          ).then(tx => {
@@ -71,13 +73,12 @@ const MintInterface = props => {
       }).catch(err => {
          errorMessage(err)
    })
-   // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
  const handleEpicMint = async () => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    setMessage('')
-   const proof = getMerkleEpicTree().getHexProof(hashedAddress);
+   const proof = epictree.getHexProof(hashedAddress);
    const price = Number(epicnum) * 0.03
    await chainverifier().then(
       () => mintContract.mintEpic(epicnum,proof,{ value: ethers.parseEther(String(price)) })
@@ -89,7 +90,6 @@ const MintInterface = props => {
       errorMessage(err)
 })
    setEpicnum(1)
-   // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
  }
  const handleRareMint = async () => {
    const signer = await provider.getSigner();
@@ -106,19 +106,16 @@ const MintInterface = props => {
          errorMessage(err)
    })
       setRarenum(1)
-   // let tx = await mintContract.setMerkleRoot(rank,getMerkleLegendTree().getHexRoot())
    
  }
  useEffect(()=> {
-   const legend = getMerkleLegendTree();
-   const legendRoot = legend.getHexRoot();
-   const legendProof = legend.getHexProof(hashedAddress);
-   const epic = getMerkleEpicTree();
-   const epicRoot = epic.getHexRoot();
-   const epicProof = epic.getHexProof(hashedAddress);
-   setEpicWhitelist(epic.verify(epicProof,hashedAddress,epicRoot))
-   setLegendWhitelist(legend.verify(legendProof,hashedAddress,legendRoot))
- },[hashedAddress])
+   const legendRoot = legendtree.getHexRoot();
+   const legendProof = legendtree.getHexProof(hashedAddress);
+   const epicRoot = epictree.getHexRoot();
+   const epicProof = epictree.getHexProof(hashedAddress);
+   setEpicWhitelist(epictree.verify(epicProof,hashedAddress,epicRoot))
+   setLegendWhitelist(legendtree.verify(legendProof,hashedAddress,legendRoot))
+ },[hashedAddress,epictree,legendtree])
 
  const handleSubmit = event => {
    event.preventDefault()
