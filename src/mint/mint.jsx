@@ -122,14 +122,14 @@ const MintInterface = props => {
  }
      return (
         <div className="mintInterface">
-        <p className="mintInterfaceText">Placeholder</p>
+        <p className="mintInterfaceText">NFT Minting</p>
         <div className="mintingform">
          <div className="tabset">
          <input type="radio" name="tabset" id="tab1" aria-controls="rare"/>
 					<label htmlFor="tab1">Rare</label>
-					<input type="radio" name="tabset" id="tab2" aria-controls="epic" disabled={!epicWhitelist}/>
+					<input type="radio" name="tabset" id="tab2" aria-controls="epic"/>
 					<label htmlFor="tab2">Epic</label>
-					<input type="radio" name="tabset" id="tab3" aria-controls="legendary" disabled={!legendWhitelist}/>
+					<input type="radio" name="tabset" id="tab3" aria-controls="legendary"/>
 					<label htmlFor="tab3">Legendary</label>
                <div className="tab-panels">
 							<section id="rare" className="tab-panel">
@@ -155,6 +155,7 @@ const MintInterface = props => {
 									</select>
 									<button type="button" className="glow-on-hover" value="Mint" onClick={handleEpicMint} disabled={!epicWhitelist}>MINT!</button>
 								</form>
+                        {!epicWhitelist && <p>You are not whitelisted</p>}
 							</section>
 							<section id="legendary" className="tab-panel">
 								<p className="mintInterfaceText">You're minting <strong className="legendary">LEGENDARY</strong> Av8tars</p>	
@@ -164,13 +165,12 @@ const MintInterface = props => {
 									</select>
 									<button type="button" className="glow-on-hover" value="Mint" onClick={handleLegendMint} disabled={!legendWhitelist}>MINT!</button>
 								</form>
+                        {!legendWhitelist && <p>You are not whitelisted</p>}
 							</section>
 						</div>
             </div>
          </div>
         {message !== '' && <p>Your token id is {message}</p>}
-        {legendWhitelist && <p>You are whitelisted to mint legend token</p>}
-        {epicWhitelist && <p>You are whitelisted to mint epic token</p>}
         {error !== '' && <p className="errorMessage">{error}</p>}
         </div>
      )

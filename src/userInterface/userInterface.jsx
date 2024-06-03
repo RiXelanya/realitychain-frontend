@@ -23,7 +23,7 @@ const UserInterface = props => {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x66eed' }],
+          params: [{ chainId: '0xa4b1' }],
         }).then(setAddress(account))
       }
       catch (err) {
@@ -31,9 +31,9 @@ const UserInterface = props => {
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [{
-              chainId: '0x66eed',
-              chainName: 'Arbitrum Goerli',
-              rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc']
+              chainId: '0xa4b1',
+              chainName: 'Arbitrum One',
+              rpcUrls: ['https://arb1.arbitrum.io/rpc']
            }],
           }).then(setAddress(account)).catch(err => {setAddress('')})
         }
