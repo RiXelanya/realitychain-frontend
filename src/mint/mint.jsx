@@ -169,6 +169,8 @@ const MintInterface = props => {
             </div>
          </div>
         {message !== '' && <p>Your token id is {message}</p>}
+        {legendWhitelist && <p>You are whitelisted to mint legend token</p>}
+        {epicWhitelist && <p>You are whitelisted to mint epic token</p>}
         {error !== '' && <p className="errorMessage">{error}</p>}
         </div>
      )
