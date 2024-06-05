@@ -19,7 +19,7 @@ const UserInterface = props => {
     const account = accounts[0];
     
     const chainId = await window.ethereum.request({ method: 'eth_chainId' })
-    if(chainId !== '0x66eed') {
+    if(chainId !== '0xa4b1') {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',

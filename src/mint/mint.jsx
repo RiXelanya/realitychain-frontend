@@ -11,7 +11,7 @@ const contractABI = require('./abi.json');
 const MintInterface = props => {
  const { address } = props ;
  const hashedAddress = keccak256(address);
- const contractAddress = '0xF3a2bBd09d38bf120a940F965266034248eC0F84';
+ const contractAddress = '0xA2aeAD85f89fc78f221A6259bd66a2072D3Ed45c';
  const [error,setError] = useState('')
  const [legendWhitelist, setLegendWhitelist] = useState(false);
  const [epicWhitelist, setEpicWhitelist] = useState(false);
@@ -32,10 +32,10 @@ const MintInterface = props => {
 
  const chainverifier = async () => {
    const chainId = await window.ethereum.request({ method: 'eth_chainId' })
-    if(chainId !== '0x66eed') {
+    if(chainId !== '0xa4b1') {
         await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x66eed' }],
+            params: [{ chainId: '0xa4b1' }],
           }).catch(err => {throw new Error("Wrong Chain")});
     }
  }
@@ -65,7 +65,7 @@ const MintInterface = props => {
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    const proof = legendtree.getHexProof(hashedAddress);
       await chainverifier().then(
-         () => mintContract.mintLegendary(proof,{ value: ethers.parseEther('0.05') })
+         () => mintContract.mintLegendary(proof,{ value: ethers.parseEther('0.0055') })
          ).then(tx => {
          return tx.wait()
       }).then(tx => {
@@ -79,7 +79,7 @@ const MintInterface = props => {
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    setMessage('')
    const proof = epictree.getHexProof(hashedAddress);
-   const price = Number(epicnum) * 0.03
+   const price = Number(epicnum) * 0.004
    await chainverifier().then(
       () => mintContract.mintEpic(epicnum,proof,{ value: ethers.parseEther(String(price)) })
       ).then(tx => {
@@ -95,7 +95,7 @@ const MintInterface = props => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
    setMessage('')
-      const price = Number(rarenum) * 0.01
+      const price = Number(rarenum) * 0.0027
       await chainverifier().then(
          () => mintContract.mintRare(rarenum,{ value: ethers.parseEther(String(price)) })
          ).then(tx => {
