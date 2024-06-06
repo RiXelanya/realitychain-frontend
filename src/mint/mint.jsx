@@ -13,7 +13,6 @@ const MintInterface = props => {
  const hashedAddress = keccak256(address);
  const contractAddress = '0xA2aeAD85f89fc78f221A6259bd66a2072D3Ed45c';
  const [error,setError] = useState('')
- const [legendWhitelist, setLegendWhitelist] = useState(false);
  const [epicWhitelist, setEpicWhitelist] = useState(false);
  const [message, setMessage] = useState('')
  const [rarenum, setRarenum] = useState(1)
@@ -59,21 +58,6 @@ const MintInterface = props => {
    setEpicnum(Number(event.target.value))
  }
 
- const handleLegendMint = async () => {
-   
-   const signer = await provider.getSigner();
-   let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
-   const proof = legendtree.getHexProof(hashedAddress);
-      await chainverifier().then(
-         () => mintContract.mintLegendary(proof,{ value: ethers.parseEther('0.0055') })
-         ).then(tx => {
-         return tx.wait()
-      }).then(tx => {
-         eventHandler(tx)     
-      }).catch(err => {
-         errorMessage(err)
-   })
- }
  const handleEpicMint = async () => {
    const signer = await provider.getSigner();
    let mintContract = new ethers.Contract(contractAddress,contractABI,signer);
@@ -109,12 +93,9 @@ const MintInterface = props => {
    
  }
  useEffect(()=> {
-   const legendRoot = legendtree.getHexRoot();
-   const legendProof = legendtree.getHexProof(hashedAddress);
    const epicRoot = epictree.getHexRoot();
    const epicProof = epictree.getHexProof(hashedAddress);
    setEpicWhitelist(epictree.verify(epicProof,hashedAddress,epicRoot))
-   setLegendWhitelist(legendtree.verify(legendProof,hashedAddress,legendRoot))
  },[hashedAddress,epictree,legendtree])
 
  const handleSubmit = event => {
@@ -129,8 +110,6 @@ const MintInterface = props => {
 					<label htmlFor="tab1">Rare</label>
 					<input type="radio" name="tabset" id="tab2" aria-controls="epic"/>
 					<label htmlFor="tab2">Epic</label>
-					<input type="radio" name="tabset" id="tab3" aria-controls="legendary"/>
-					<label htmlFor="tab3">Legendary</label>
                <div className="tab-panels">
 							<section id="rare" className="tab-panel">
 								<p className="mintInterfaceText">You're minting <strong className="rare">RARE</strong> Av8tars</p>	
@@ -156,16 +135,6 @@ const MintInterface = props => {
 									<button type="button" className="glow-on-hover" value="Mint" onClick={handleEpicMint} disabled={!epicWhitelist}>MINT!</button>
 								</form>
                         {!epicWhitelist && <p>You are not whitelisted</p>}
-							</section>
-							<section id="legendary" className="tab-panel">
-								<p className="mintInterfaceText">You're minting <strong className="legendary">LEGENDARY</strong> Av8tars</p>	
-								<form onSubmit={handleSubmit}>
-									<select name="amount" id="amount" className="input-field">
-										<option defaultValue="1">1</option>
-									</select>
-									<button type="button" className="glow-on-hover" value="Mint" onClick={handleLegendMint} disabled={!legendWhitelist}>MINT!</button>
-								</form>
-                        {!legendWhitelist && <p>You are not whitelisted</p>}
 							</section>
 						</div>
             </div>
