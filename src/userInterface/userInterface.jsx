@@ -62,6 +62,8 @@ const UserInterface = props => {
     <div className='userInterface'>
     <p className='userInterfaceText'>Connected to Address<br></br>{address}</p>
     <div className="break"></div>
+    <p>Choose Av8tars Rarity to mint. Only whitelisted addresses may mint epic tier</p>
+    <div className="break"></div>
     <MintInterface address={address}></MintInterface>
     </div>
   )

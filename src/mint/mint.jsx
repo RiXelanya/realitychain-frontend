@@ -113,6 +113,7 @@ const MintInterface = props => {
                <div className="tab-panels">
 							<section id="rare" className="tab-panel">
 								<p className="mintInterfaceText">You're minting <strong className="rare">RARE</strong> Av8tars</p>	
+                        <p className="mintInterfaceText">1 <strong className="rare">RARE</strong> Av8tars = 0.0027 $ETH</p>	
 								<form onSubmit={handleSubmit}>
 									<select name="amount" id="amount" className="input-field" onChange={handleRareChange}>
 										<option defaultValue="1">1</option>
@@ -126,6 +127,7 @@ const MintInterface = props => {
 							</section>
 							<section id="epic" className="tab-panel">
 								<p className="mintInterfaceText">You're minting <strong className="epic">EPIC</strong> Av8tars</p>	
+                        <p className="mintInterfaceText">1 <strong className="epic">EPIC</strong> Av8tars = 0.004 $ETH</p>
 								<form onSubmit={handleSubmit}>
 									<select name="amount" id="amount" className="input-field" onChange={handleEpicChange}>
 										<option defaultValue="1">1</option>
